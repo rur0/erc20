@@ -24,6 +24,17 @@ func (ts TokenSpec) Addr() string {
 	return strings.ToLower(ts.Address.String())
 }
 
+type TokenSpecs []TokenSpec
+
+func (ts TokenSpecs) GetAddrs() []common.Address {
+	addrs := []common.Address{}
+	for _, tokenSpec := range ts {
+		addrs = append(addrs, tokenSpec.Address)
+	}
+
+	return addrs
+}
+
 func GetToken(contract common.Address, client *ethclient.Client) (*Token, error) {
 	var err error
 	tk, ok := tokens[contract]
