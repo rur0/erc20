@@ -57,6 +57,7 @@ func FindFirstFromLog(logs []*types.Log, topic common.Hash, from common.Address)
 	return nil
 }
 
+// IsAddrInSlice ...
 func IsAddrInSlice(addr common.Address, addrs []common.Address) bool {
 	for _, Addr := range addrs {
 		if Addr == addr {
