@@ -83,3 +83,17 @@ func GetTokenSpec(contract common.Address, client *ethclient.Client) (*TokenSpec
 
 	return &tkSpec, nil
 }
+
+func GetTokenSpecs(client *ethclient.Client, contracts ...common.Address) (TokenSpecs, error) {
+	specs := TokenSpecs{}
+
+	for _, addr := range contracts {
+		spec, err := GetTokenSpec(addr, client)
+		if err != nil {
+			return nil, err
+		}
+		specs = append(specs, *spec)
+	}
+
+	return specs, nil
+}
