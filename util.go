@@ -47,20 +47,6 @@ func ParseLogTransfer(log *types.Log) (*LogTransfer, error) {
 	return &logTransfer, nil
 }
 
-type LogPairCreated struct {
-	Token0, Token1, Pair common.Address
-}
-
-func ParseLogPairCreated(log *types.Log) (*LogPairCreated, error) {
-	logPairCreated := LogPairCreated{
-		Token0: common.BytesToAddress(log.Topics[1].Bytes()),
-		Token1: common.BytesToAddress(log.Topics[2].Bytes()),
-		Pair:   common.BytesToAddress(log.Data),
-	}
-
-	return &logPairCreated, nil
-}
-
 // FindFirstFromLog finds the first occurence of a log from a given address
 func FindFirstFromLog(logs []*types.Log, topic common.Hash, from common.Address) *types.Log {
 	for _, log := range logs {

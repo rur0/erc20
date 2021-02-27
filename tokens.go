@@ -35,6 +35,15 @@ func (ts TokenSpecs) GetAddrs() []common.Address {
 	return addrs
 }
 
+func (ts TokenSpecs) GetSymbols() []string {
+	symbols := []string{}
+	for _, tokenSpec := range ts {
+		symbols = append(symbols, tokenSpec.Symbol)
+	}
+
+	return symbols
+}
+
 func GetToken(contract common.Address, client *ethclient.Client) (*Token, error) {
 	var err error
 	tk, ok := tokens[contract]
