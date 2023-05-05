@@ -22,3 +22,8 @@ func TestTokenSpec(t *testing.T) {
 
 	fmt.Println(tkSpec)
 }
+
+func TestCompareAddr(t *testing.T) {
+	tkA, tkB := common.HexToAddress("0xb1e9157c2fdcc5a856c8da8b2d89b6c32b3c1229"), common.HexToAddress("0xb1e9157c2fdcc5a856c8da8b2d89b6c32b3c1229")
+	fmt.Println(tkA == tkB)
+}

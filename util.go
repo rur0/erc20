@@ -50,8 +50,26 @@ func ParseLogTransfer(log *types.Log) (*LogTransfer, error) {
 // FindFirstFromLog finds the first occurence of a log from a given address
 func FindFirstFromLog(logs []*types.Log, topic common.Hash, from common.Address) *types.Log {
 	for _, log := range logs {
-		if log.Topics[0] == topic && log.Address == from {
+		if len(log.Topics) != 0 && log.Topics[0] == topic && log.Address == from {
 			return log
+		}
+	}
+	return nil
+}
+
+func FindFirstLog(logs []*types.Log, topic common.Hash) *types.Log {
+	for _, log := range logs {
+		if len(log.Topics) != 0 && log.Topics[0] == topic {
+			return log
+		}
+	}
+	return nil
+}
+
+func FindLastLog(logs []*types.Log, topic common.Hash) *types.Log {
+	for i := len(logs) - 1; i >= 0; i-- {
+		if logs[i].Topics[0] == topic {
+			return logs[i]
 		}
 	}
 	return nil
@@ -65,4 +83,16 @@ func IsAddrInSlice(addr common.Address, addrs []common.Address) bool {
 		}
 	}
 	return false
+}
+
+func TestEqBytes(a, b []byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
