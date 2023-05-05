@@ -2,14 +2,10 @@ module github.com/rur0/erc20
 
 go 1.20
 
-require (
-	github.com/ethereum/go-ethereum v1.11.6
-	github.com/sirupsen/logrus v1.9.0
-)
+require github.com/ethereum/go-ethereum v1.11.6
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
-	github.com/btcsuite/btcd v0.0.0-20171128150713-2e60448ffcc6 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/deckarep/golang-set/v2 v2.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect

@@ -1,11 +1,11 @@
 package erc20
 
 import (
+	"log"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -16,12 +16,12 @@ var (
 func TestErc20(t *testing.T) {
 	client, err := ethclient.Dial(ETH_NODE)
 	if err != nil {
-		logrus.Fatal(err)
+		log.Fatal(err)
 	}
 	addr := common.HexToAddress("0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a")
 	isErc20, err := IsErc20(client, addr)
 	if err != nil {
 		isErc20 = false
 	}
-	logrus.Info(isErc20)
+	log.Println(isErc20)
 }
