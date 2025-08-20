@@ -10,7 +10,7 @@ import (
 )
 
 func TestTokenSpec(t *testing.T) {
-	client, err := ethclient.Dial("https://main-light.eth.linkpool.io")
+	client, err := ethclient.Dial(ETH_NODE)
 	if err != nil {
 		log.Fatal(err)
 	}

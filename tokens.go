@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
-	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -13,9 +12,11 @@ import (
 
 var (
 	//tokens = make(map[common.Address]*Token)
-	tokens = sync.Map{}
+	//tokens = sync.Map{}
+	tokens = NewTTLMap(60 * 60)
 	//tokenSpecs = make(map[common.Address]TokenSpec)
-	tokenSpecs = sync.Map{}
+	//tokenSpecs = sync.Map{}
+	tokenSpecs = NewTTLMap(60 * 60)
 )
 
 type TokenSpec struct {
@@ -27,9 +28,15 @@ type TokenSpec struct {
 }
 
 func (ts TokenSpec) String() string {
+	totalSupply := ts.TotalSupply
+
+	if totalSupply != nil && ts.Decimals != 0 {
+		totalSupply = new(big.Int).Div(ts.TotalSupply, new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(ts.Decimals)), nil))
+	}
+
 	return fmt.Sprintf("Name: %s \nSymbol: %s \nDecimals: %d \nTotalSupply: %s \nAddress: %s",
 		ts.Name, ts.Symbol, ts.Decimals,
-		new(big.Int).Div(ts.TotalSupply, new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(ts.Decimals)), nil)),
+		totalSupply,
 		ts.Address,
 	)
 }
@@ -57,6 +64,15 @@ func (tss TokenSpecs) Index(ts TokenSpec) int {
 	return -1
 }
 
+func (tss TokenSpecs) GetByAddr(addr common.Address) *TokenSpec {
+	idx := tss.Index(TokenSpec{Address: addr})
+	if idx == -1 {
+		return nil
+	}
+
+	return &tss[idx]
+}
+
 func (ts TokenSpecs) GetAddrs() []common.Address {
 	addrs := []common.Address{}
 	for _, tokenSpec := range ts {
@@ -76,8 +92,7 @@ func (ts TokenSpecs) GetSymbols() []string {
 }
 
 func GetToken(contract common.Address, client *ethclient.Client) (*Token, error) {
-	//	tk, ok := tokens[contract]
-	_tk, ok := tokens.Load(contract)
+	_tk, ok := tokens.Get(contract.String())
 	if ok {
 		return _tk.(*Token), nil
 	}
@@ -87,13 +102,14 @@ func GetToken(contract common.Address, client *ethclient.Client) (*Token, error)
 		return nil, err
 	}
 
-	tokens.Store(contract, tk)
+	tokens.Put(contract.String(), tk)
+	//tokens.Store(contract, tk)
 
 	return tk, nil
 }
 
 func GetTokenSpec(contract common.Address, client *ethclient.Client) (*TokenSpec, error) {
-	spec, ok := tokenSpecs.Load(contract)
+	spec, ok := tokenSpecs.Get(contract.String())
 	if ok {
 		return spec.(*TokenSpec), nil
 	}
@@ -127,7 +143,7 @@ func GetTokenSpec(contract common.Address, client *ethclient.Client) (*TokenSpec
 
 	tkSpec.Address = contract
 
-	tokenSpecs.Store(contract, tkSpec)
+	tokenSpecs.Put(contract.String(), tkSpec)
 
 	return tkSpec, nil
 }

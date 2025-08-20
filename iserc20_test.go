@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	BSC_NODE = "ws://148.251.91.76:8546"
-	ETH_NODE = "ws://157.90.5.252:3334"
+	ETH_NODE = "https://eth.llamarpc.com"
 )
 
 func TestErc20(t *testing.T) {
@@ -21,7 +20,9 @@ func TestErc20(t *testing.T) {
 	addr := common.HexToAddress("0xfA5047c9c78B8877af97BDcb85Db743fD7313d4a")
 	isErc20, err := IsErc20(client, addr)
 	if err != nil {
-		isErc20 = false
+		t.Fatal(err)
 	}
-	log.Println(isErc20)
+	if !isErc20 {
+		t.Fatal("expected erc20 is not")
+	}
 }
